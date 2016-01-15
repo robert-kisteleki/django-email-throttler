@@ -1,0 +1,4 @@
+VERSION = (0, 1, 0)
+__version__ = "0.1.0"
+__authors__ = ["Robert Kisteleki <kistel@gmail.com>", ]
+

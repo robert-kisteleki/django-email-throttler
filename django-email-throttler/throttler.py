@@ -1,5 +1,6 @@
 import arrow
-import os, glob
+import os
+import glob
 
 from django.core.mail.backends.base import BaseEmailBackend
 from django.core import mail
@@ -28,19 +29,19 @@ class ThrottledEmailBackend(BaseEmailBackend):
         to_send = []
         for message in email_messages:
 
-            throttled = ThrottledEmailBackend.THROTTLE_NO
-
             # it'd be possible to cache this, but it's probably not worth it
             same_subj = self._get_same_subject_sofar(bb, message.subject)
 
             # check for overall throttling
-            if ThrottledEmailBackend.overall_threshold>0 and in_bucket_total >= ThrottledEmailBackend.overall_threshold:
-                throttled = ThrottledEmailBackend.THROTTLE_OVERALL
+            if self.overall_threshold>0 and \
+                            in_bucket_total >= self.overall_threshold:
+                throttled = self.THROTTLE_OVERALL
                 #print("THROTTLE_OVERALL")
 
             # check for subject throttling
-            elif ThrottledEmailBackend.subject_threshold>0 and same_subj >= ThrottledEmailBackend.subject_threshold:
-                throttled = ThrottledEmailBackend.THROTTLE_SUBJECT
+            elif self.subject_threshold>0 and \
+                            same_subj >= self.subject_threshold:
+                throttled = self.THROTTLE_SUBJECT
                 #print("THROTTLE_SUBJECT")
 
             # seems to be below all thresholds, send it
@@ -52,7 +53,7 @@ class ThrottledEmailBackend(BaseEmailBackend):
                     )
                 )
                 to_send.append(message)
-                throttled = ThrottledEmailBackend.THROTTLE_NO
+                throttled = self.THROTTLE_NO
                 #print("THROTTLE_NO")
 
             self._save_email_info(bb, message, throttled)
@@ -63,32 +64,37 @@ class ThrottledEmailBackend(BaseEmailBackend):
         connection.send_messages(to_send)
         connection.close()
 
-
     # calculate the beginning of the current bucket
-    def _bucket_begin(self):
+    @classmethod
+    def _bucket_begin(cls):
         epoch_now = arrow.utcnow().timestamp
-        return arrow.get(epoch_now - epoch_now%ThrottledEmailBackend.interval_size).datetime
-
+        return arrow.get(epoch_now - (epoch_now % cls.interval_size)).datetime
 
     # get total number of messages in the current bucket
-    def _get_in_bucket_sofar(self, bb):
-        sum = 0
-        pattern = os.path.join(ThrottledEmailBackend.tmpdir_name, ThrottledEmailBackend.file_prefix+str(bb)+"*") 
+    @classmethod
+    def _get_in_bucket_sofar(cls, bb):
+        total = 0
+        pattern = os.path.join(cls.tmpdir_name,
+                               cls.file_prefix+str(bb)+"*")
         for f in glob.glob(pattern): 
             if os.path.isfile(f):
-                sum += os.stat(f).st_size 
-        return sum
-
+                total += os.stat(f).st_size
+        return total
 
     # get number messages in the current bucket with a given subject
-    def _get_same_subject_sofar(self, bb, subject):
+    @classmethod
+    def _get_same_subject_sofar(cls, bb, subject):
         try:
-            return os.stat(os.path.join(ThrottledEmailBackend.tmpdir_name, ThrottledEmailBackend.file_prefix+str(bb)+"^"+subject)).st_size
+            return os.stat(os.path.join(cls.tmpdir_name,
+                                        cls.file_prefix+str(bb)+"^"+subject)
+            ).st_size
         except FileNotFoundError:
             return 0
 
-
     # record meta info about this mail
-    def _save_email_info(self, bb, message, throttled):
-        with open(os.path.join(ThrottledEmailBackend.tmpdir_name, ThrottledEmailBackend.file_prefix+str(bb)+"^"+message.subject),"a") as out:
+    @classmethod
+    def _save_email_info(cls, bb, message, throttled):
+        with open(os.path.join(ThrottledEmailBackend.tmpdir_name,
+                               ThrottledEmailBackend.file_prefix+str(bb)+"^"+message.subject),
+                  "a") as out:
             out.write(str(throttled))

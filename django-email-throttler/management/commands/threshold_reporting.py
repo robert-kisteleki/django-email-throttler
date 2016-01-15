@@ -1,6 +1,7 @@
 from optparse import make_option
 import arrow
-import os, glob
+import os
+import glob
 
 from django.core.mail import mail_admins
 from django.core.management.base import BaseCommand
@@ -51,7 +52,6 @@ class Command(BaseCommand):
         ),
     )
 
-
     # command handler
     def handle(self, *args, **options):
 
@@ -69,11 +69,11 @@ class Command(BaseCommand):
         if not options['no_clean_log']:
             self._clean_log(bb)
 
-
     # assemble and send email report
-    def _send_report(self, bb, be, force_email):
+    @classmethod
+    def _send_report(cls, bb, be, force_email):
 
-        n_no, n_subject, n_overall, details = self._collect_data(bb)
+        n_no, n_subject, n_overall, details = cls._collect_data(bb)
 
         subject = "Mail throttling report for {bb} -- T:{t} N:{n} S:{s} O:{o}".format(
             bb=bb.strftime('%Y-%m-%d %H:%M'),
@@ -95,51 +95,56 @@ class Command(BaseCommand):
         # dump the collection in a nice format
         for key, value in details.items():
             out += "{t}/{n}/{s}/{o}\t'{subject}'\n".format(
-                t=value[ThrottledEmailBackend.THROTTLE_NO]+value[ThrottledEmailBackend.THROTTLE_SUBJECT]+value[ThrottledEmailBackend.THROTTLE_OVERALL],
+                t=value[ThrottledEmailBackend.THROTTLE_NO] +
+                  value[ThrottledEmailBackend.THROTTLE_SUBJECT] +
+                  value[ThrottledEmailBackend.THROTTLE_OVERALL],
                 n=value[ThrottledEmailBackend.THROTTLE_NO],
                 s=value[ThrottledEmailBackend.THROTTLE_SUBJECT],
                 o=value[ThrottledEmailBackend.THROTTLE_OVERALL],
                 subject=key)
 
         # send this report if there's something to say
-        if (n_no+n_subject+n_overall>0) and (force_email or n_subject>0 or n_overall>0):
+        if (n_no+n_subject+n_overall > 0) and (force_email or n_subject > 0 or n_overall > 0):
             mail_admins(subject, out)
 
-
     # clean up the entries for the current interval from the db
-    def _clean_log(self, bb):
-        pattern = os.path.join(ThrottledEmailBackend.tmpdir_name, ThrottledEmailBackend.file_prefix+str(bb)+"*") 
+    @classmethod
+    def _clean_log(bb):
+        pattern = os.path.join(ThrottledEmailBackend.tmpdir_name,
+                               ThrottledEmailBackend.file_prefix+str(bb)+"*")
         for f in glob.glob(pattern): 
             if os.path.isfile(f):
                 os.remove(f)
 
-
     # assuming that the script is run not much after the current bucket started
     # calculate start time of the *previous* bucket
-    def _bucket_begin(self):
+    @classmethod
+    def _bucket_begin(cls):
         epoch_now = arrow.utcnow().timestamp
-        return arrow.get(epoch_now - epoch_now%_interval_size - _interval_size).datetime
-
+        return arrow.get(epoch_now - (epoch_now % _interval_size) - _interval_size).datetime
 
     # calculate end time of a bucket based on the start time
-    def _bucket_end(self, bb):
+    @classmethod
+    def _bucket_end(cls, bb):
         return arrow.get(arrow.get(bb).timestamp+ThrottledEmailBackend.interval_size).datetime
 
-
     # get number of total, subject/overall filtered messages for a bucket and all details too
-    def _collect_data(self, bb):
+    @classmethod
+    def _collect_data(cls, bb):
         n_no = 0
         n_subject = 0
         n_overall = 0
         collector = {}
 
-        pattern = os.path.join(ThrottledEmailBackend.tmpdir_name, ThrottledEmailBackend.file_prefix+str(bb)+"*")
+        pattern = os.path.join(ThrottledEmailBackend.tmpdir_name,
+                               ThrottledEmailBackend.file_prefix + str(bb) + "*")
         for f in glob.glob(pattern):
             if os.path.isfile(f):
                 subject = f[f.index('^')+1:]
 
                 collector[subject] = {}
-                with open(os.path.join(ThrottledEmailBackend.tmpdir_name, f), "r") as subject_file:
+                with open(os.path.join(ThrottledEmailBackend.tmpdir_name, f),
+                          "r") as subject_file:
                     content = subject_file.read()
 
                     # count

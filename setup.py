@@ -2,6 +2,7 @@ import os
 from os.path import abspath, dirname, join
 from setuptools import setup
 
+
 # Allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
@@ -11,8 +12,9 @@ current_dir = dirname(abspath(__file__))
 # Get the long description from README.md
 setup(
     name="django-email-throttler",
-    version="0.2.1",
+    version="0.2.2",
     packages=["django-email-throttler"],
+    include_package_data=True,
     license="GPLv3",
     description="An email throttler for Django",
     long_description="A Django email backend and more to limit the amount of mails sent out",

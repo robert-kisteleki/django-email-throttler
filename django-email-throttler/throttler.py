@@ -1,4 +1,4 @@
-import arrow
+import datetime
 import os
 import glob
 
@@ -67,8 +67,10 @@ class ThrottledEmailBackend(BaseEmailBackend):
     # calculate the beginning of the current bucket
     @classmethod
     def _bucket_begin(cls):
-        epoch_now = arrow.utcnow().timestamp
-        return arrow.get(epoch_now - (epoch_now % cls.interval_size)).datetime
+        epoch_now = int(datetime.datetime.utcnow().strftime('%s'))
+        return datetime.datetime.fromtimestamp(
+            epoch_now - (epoch_now % cls.interval_size)
+        )
 
     # get total number of messages in the current bucket
     @classmethod

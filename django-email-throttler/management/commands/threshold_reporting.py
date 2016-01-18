@@ -1,5 +1,6 @@
 from optparse import make_option
-import arrow
+import datetime
+import dateutil.parser
 import os
 import glob
 
@@ -48,7 +49,7 @@ class Command(BaseCommand):
             action="store",
             dest="start_date",
             default=False,
-            help="Use this as the starting time of an interval-to-check. Format is anything arrow can recognise"
+            help="Use this as the starting time of an interval-to-check. Format is 'YYYY-MM-DD HH:MM' (UTC)"
         ),
     )
 
@@ -57,7 +58,7 @@ class Command(BaseCommand):
 
         # define our time interval
         if options['start_date']:
-            bb = arrow.get(options['start_date']).datetime
+            bb = dateutil.parser.parse(options['start_date'])
         else:
             bb = self._bucket_begin()
         be = self._bucket_end(bb)
@@ -109,7 +110,7 @@ class Command(BaseCommand):
 
     # clean up the entries for the current interval from the db
     @classmethod
-    def _clean_log(bb):
+    def _clean_log(cls, bb):
         pattern = os.path.join(ThrottledEmailBackend.tmpdir_name,
                                ThrottledEmailBackend.file_prefix+str(bb)+"*")
         for f in glob.glob(pattern): 
@@ -120,15 +121,20 @@ class Command(BaseCommand):
     # calculate start time of the *previous* bucket
     @classmethod
     def _bucket_begin(cls):
-        epoch_now = arrow.utcnow().timestamp
-        return arrow.get(epoch_now - (epoch_now % _interval_size) - _interval_size).datetime
+        epoch_now = int(datetime.datetime.utcnow().strftime('%s'))
+        return datetime.datetime.fromtimestamp(
+            epoch_now - (epoch_now % ThrottledEmailBackend.interval_size) - ThrottledEmailBackend.interval_size
+        )
 
     # calculate end time of a bucket based on the start time
     @classmethod
     def _bucket_end(cls, bb):
-        return arrow.get(arrow.get(bb).timestamp+ThrottledEmailBackend.interval_size).datetime
+        return datetime.datetime.fromtimestamp(
+            int(bb.strftime('%s')) + ThrottledEmailBackend.interval_size
+        )
 
-    # get number of total, subject/overall filtered messages for a bucket and all details too
+    # get number of total, subject/overall filtered messages for a bucket
+    # and all details too
     @classmethod
     def _collect_data(cls, bb):
         n_no = 0

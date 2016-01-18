@@ -1,4 +1,4 @@
-An email throttler for Django
+An Email Throttler for Django
 =============================
 
 Django error logging and emailing on a busy website can send a *lot* of emails,
@@ -14,7 +14,7 @@ but since the purpose is to hold back some emails, it may hurt you more than
 it helps.
 
 
-How Does it Work?
+How Does It Work?
 -----------------
 
 The package contains a Django email backend that has a local cache of what
@@ -40,8 +40,6 @@ better.
 
 Installation and Configuration
 ------------------------------
-
-Dependency: arrow
 
 Install the package with pip, for example. *TODO*
 
@@ -79,12 +77,13 @@ Add these to your settings:
     }
 
 
-Admin Mailing Configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reporting Configuration
+~~~~~~~~~~~~~~~~~~~~~~~
 
-You should add a crontab entry to mail out the statistics, and clean the
-database. Make sure the frequency you do this is aligned to the intervals
-you set. Something like this woould work:
+You should add a crontab entry to mail out the statistics and clean the
+database. Make sure the frequency you're using to run this with is aligned to
+the intervals you set. Something like this would work, assuming you have your
+virtualenv kick in automagically:
 
 .. code:: bash
 

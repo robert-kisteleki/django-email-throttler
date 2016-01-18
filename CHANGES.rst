@@ -2,6 +2,12 @@ Release History
 ===============
 
 
+0.2.5 (2016-01-18)
+------------------
+
+- Change to a proper app name: django_email_throttler
+
+
 0.2.3 (2016-01-18)
 ------------------
 

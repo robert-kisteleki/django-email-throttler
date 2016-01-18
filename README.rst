@@ -64,7 +64,7 @@ Add these to your settings:
             'mail_admins': {
                 'level': 'ERROR',
                 'class': 'django.utils.log.AdminEmailHandler',
-                'email_backend': 'emailthrottler.throttler.ThrottledEmailBackend',
+                'email_backend': 'django_email_throttler.throttler.ThrottledEmailBackend',
                 'include_html': True,
             }
         },

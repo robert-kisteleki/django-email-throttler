@@ -8,7 +8,7 @@ from django.core.mail import mail_admins
 from django.core.management.base import BaseCommand
 from django.conf import settings
 
-from emailthrottler.throttler import ThrottledEmailBackend
+from ...throttler import ThrottledEmailBackend
 
 
 class Command(BaseCommand):

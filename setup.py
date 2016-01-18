@@ -12,7 +12,7 @@ current_dir = dirname(abspath(__file__))
 # Get the long description from README.md
 setup(
     name="django-email-throttler",
-    version="0.2.3",
+    version="0.2.4",
     packages=["django-email-throttler"],
     include_package_data=True,
     license="GPLv3",

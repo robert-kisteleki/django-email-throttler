@@ -41,7 +41,7 @@ better.
 Installation and Configuration
 ------------------------------
 
-Install the package with pip, for example. *TODO*
+Install the package with pip, for example.
 
 Settings and Defaults
 ~~~~~~~~~~~~~~~~~~~~~
@@ -87,5 +87,5 @@ virtualenv kick in automagically:
 
 .. code:: bash
 
-    */10 * * * * $WHATEVER_PATH/manage.py threshold_reporting
+    */10 * * * * $WHATEVER_PATH/manage.py throttle_report
 

@@ -2,6 +2,12 @@ Release History
 ===============
 
 
+0.2.3 (2016-01-18)
+------------------
+
+- Various changes to make a pypi package
+
+
 0.2.1 (2016-01-18)
 ------------------
 

@@ -1,0 +1,5 @@
+include CHANGES.rst
+include LICENSE
+include README.rst
+include MANIFEST.in
+recursive-include django-email-throttler *.py

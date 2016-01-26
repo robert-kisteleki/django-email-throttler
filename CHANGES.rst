@@ -2,6 +2,12 @@ Release History
 ===============
 
 
+0.3.0 (2016-01-26)
+------------------
+
+- use OSError instead of FileNotFoundError for python 2 compatibility
+
+
 0.2.7 (2016-01-26)
 ------------------
 

@@ -92,7 +92,7 @@ class ThrottledEmailBackend(BaseEmailBackend):
                                         cls.file_prefix+str(bb)+"^"+
                                         urlsafe_b64encode(subject.encode('utf-8')).decode('ascii'))
             ).st_size
-        except FileNotFoundError:
+        except OSError:
             return 0
 
     # record meta info about this mail

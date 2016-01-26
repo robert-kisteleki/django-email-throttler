@@ -3,6 +3,7 @@ import datetime
 import dateutil.parser
 import os
 import glob
+from base64 import urlsafe_b64decode
 
 from django.core.mail import mail_admins
 from django.core.management.base import BaseCommand
@@ -102,7 +103,8 @@ class Command(BaseCommand):
                 n=value[ThrottledEmailBackend.THROTTLE_NO],
                 s=value[ThrottledEmailBackend.THROTTLE_SUBJECT],
                 o=value[ThrottledEmailBackend.THROTTLE_OVERALL],
-                subject=key)
+                subject=urlsafe_b64decode(key).decode('utf-8')
+                )
 
         # send this report if there's something to say
         if (n_no+n_subject+n_overall > 0) and (force_email or n_subject > 0 or n_overall > 0):

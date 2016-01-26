@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 # Get the long description from README.md
 setup(
     name="django-email-throttler",
-    version="0.2.6",
+    version="0.2.7",
     packages=["django_email_throttler"],
     include_package_data=True,
 

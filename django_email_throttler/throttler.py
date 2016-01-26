@@ -1,6 +1,7 @@
 import datetime
 import os
 import glob
+from base64 import urlsafe_b64encode
 
 from django.core.mail.backends.base import BaseEmailBackend
 from django.core import mail
@@ -88,7 +89,8 @@ class ThrottledEmailBackend(BaseEmailBackend):
     def _get_same_subject_sofar(cls, bb, subject):
         try:
             return os.stat(os.path.join(cls.tmpdir_name,
-                                        cls.file_prefix+str(bb)+"^"+subject)
+                                        cls.file_prefix+str(bb)+"^"+
+                                        urlsafe_b64encode(subject.encode('utf-8')).decode('ascii'))
             ).st_size
         except FileNotFoundError:
             return 0
@@ -97,6 +99,7 @@ class ThrottledEmailBackend(BaseEmailBackend):
     @classmethod
     def _save_email_info(cls, bb, message, throttled):
         with open(os.path.join(ThrottledEmailBackend.tmpdir_name,
-                               ThrottledEmailBackend.file_prefix+str(bb)+"^"+message.subject),
+                               ThrottledEmailBackend.file_prefix+str(bb)+"^"+
+                               urlsafe_b64encode(message.subject.encode('utf-8')).decode('ascii')),
                   "a") as out:
             out.write(str(throttled))

@@ -2,6 +2,12 @@ Release History
 ===============
 
 
+0.2.7 (2016-01-26)
+------------------
+
+- encode email subjects as urlsafe_base64 to avoid filename problems
+
+
 0.2.6 (2016-01-24)
 ------------------
 

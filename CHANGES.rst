@@ -2,6 +2,12 @@ Release History
 ===============
 
 
+0.3.1 (2016-01-26)
+------------------
+
+- pypi was acting up, bumping version to re-publish
+
+
 0.3.0 (2016-01-26)
 ------------------
 

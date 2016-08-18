@@ -1,4 +1,3 @@
-from optparse import make_option
 import datetime
 import dateutil.parser
 import os
@@ -23,36 +22,39 @@ class Command(BaseCommand):
 
     help = "Report on email throttling"
 
-    option_list = BaseCommand.option_list + (
-        make_option(
+    def add_arguments(self, parser):
+
+        parser.add_argument(
             '--no-clean-log',
             action='store_true',
             dest='no_clean_log',
             default=False,
             help="Keep email log"
-        ),
-        make_option(
+        )
+
+        parser.add_argument(
             '--force-email',
             action='store_true',
             dest='force_email',
             default=False,
             help="Send summary email even if there was no throttling (but only if there were emails in general)"
-        ),
-        make_option(
+        )
+
+        parser.add_argument(
             '--no-email',
             action='store_true',
             dest='no_email',
             default=False,
             help="Don't sent summary email even if there would be something to report"
-        ),
-        make_option(
+        )
+
+        parser.add_argument(
             "--start-date",
             action="store",
             dest="start_date",
             default=False,
             help="Use this as the starting time of an interval-to-check. Format is 'YYYY-MM-DD HH:MM' (UTC)"
-        ),
-    )
+        )
 
     # command handler
     def handle(self, *args, **options):

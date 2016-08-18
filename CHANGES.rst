@@ -2,6 +2,12 @@ Release History
 ===============
 
 
+0.3.2 (2016-08-18)
+------------------
+
+- change optparse to argparse, which is enforced by Django 1.10
+
+
 0.3.1 (2016-01-26)
 ------------------
 

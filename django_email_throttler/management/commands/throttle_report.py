@@ -21,6 +21,7 @@ class Command(BaseCommand):
     """
 
     help = "Report on email throttling"
+    requires_system_checks = False
 
     def add_arguments(self, parser):
 

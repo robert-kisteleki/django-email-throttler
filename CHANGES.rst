@@ -2,6 +2,14 @@ Release History
 ===============
 
 
+0.3.3 (2016-09-20)
+------------------
+
+- Use "requires_system_checks = False" to disable system checks on startup.
+  It comes handy e.g. when the main database in unavailable: this way the
+  reporting still works.
+
+
 0.3.2 (2016-08-18)
 ------------------
 

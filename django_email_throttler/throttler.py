@@ -19,7 +19,7 @@ class ThrottledEmailBackend(BaseEmailBackend):
     interval_size = getattr(settings, 'EMAILTHROTTLER_INTERVAL', 600)
     subject_threshold = getattr(settings, 'EMAILTHROTTLER_SUBJECT_THRESHOLD', 3)
     overall_threshold = getattr(settings, 'EMAILTHROTTLER_OVERALL_THRESHOLD', 15)
-    trucate_subject = getattr(settings, 'EMAILTHROTTLER_TRUNCATE_SUBJECT', None)
+    truncate_subject = getattr(settings, 'EMAILTHROTTLER_TRUNCATE_SUBJECT', None)
 
     # note: there's no open() an close()
 
@@ -97,7 +97,7 @@ class ThrottledEmailBackend(BaseEmailBackend):
     # record meta info about this mail
     @classmethod
     def _save_email_info(cls, bb, message, throttled):
-        filename = cls._get_file_name(bb, message)
+        filename = cls._get_file_name(bb, message.subject)
         with open(filename, "a") as out:
             out.write(str(throttled))
 
@@ -105,8 +105,8 @@ class ThrottledEmailBackend(BaseEmailBackend):
     @classmethod
     def _get_file_name(cls, bb, subject):
         subject_part = subject.encode('utf-8').decode('ascii')
-        if self.truncate_subject is not None:
-            subject_part = subject_part[0:self.truncate_subject]
+        if cls.truncate_subject is not None:
+            subject_part = subject_part[:cls.truncate_subject]
         return os.path.join(
             cls.tmpdir_name,
             cls.file_prefix + str(bb) + "^" + urlsafe_b64encode(subject_part)

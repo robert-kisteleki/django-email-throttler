@@ -54,6 +54,7 @@ Add these to your settings:
     EMAILTHROTTLER_TMPDIR = '/tmp'
     EMAILTHROTTLER_PREFIX = 'emailthrottler-'
     EMAILTHROTTLER_INTERVAL = 600
+    EMAILTHROTTLER_TRUNCATE_SUBJECT = None # 128 is also ok
     EMAILTHROTTLER_SUBJECT_THRESHOLD = 3 # 0 for no-check
     EMAILTHROTTLER_OVERALL_THRESHOLD = 15 # 0 for no-check
 

@@ -2,6 +2,14 @@ Release History
 ===============
 
 
+0.3.4 (2018-04-19)
+------------------
+
+- Added EMAILTHROTTLER_TRUNCATE_SUBJECT (integer) to configuration to limit
+  the length of file names created by the middleware. This can come handy if
+  you hit file system limitations. Default value is None.
+
+
 0.3.3 (2016-09-20)
 ------------------
 

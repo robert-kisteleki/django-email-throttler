@@ -104,10 +104,15 @@ class ThrottledEmailBackend(BaseEmailBackend):
     # assemble the storage file name based on bucket begin + email subject
     @classmethod
     def _get_file_name(cls, bb, subject):
-        subject_part = subject.encode('utf-8').decode('ascii')
+        if isinstance(subject, bytes):
+            # Round trip to enforce ASCII
+            subject_part = subject.decode("utf-8").encode("ascii")
+        else:
+            # Encode str as ASCII bytes
+            subject_part = subject.encode("ascii")
         if cls.truncate_subject is not None:
-            subject_part = subject_part[:cls.truncate_subject]
+            subject_part = subject_part[: cls.truncate_subject]
         return os.path.join(
-            cls.tmpdir_name,
-            cls.file_prefix + str(bb) + "^" + urlsafe_b64encode(subject_part)
+            cls.tmpdir_name, cls.file_prefix, + str(bb), + "^" +
+            urlsafe_b64encode(subject_part).decode("ascii"),
         )

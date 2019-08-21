@@ -19,9 +19,9 @@ How Does It Work?
 
 The package contains a Django email backend that has a local cache of what
 emails were sent (based on subjec, not content). If the total amount of mails
-per time unit goes over an overall threshold, then the excess is just logged,
+per time unit goes over an overall threshold, then the excess is just counted,
 not sent out. Similarly, if the amount of mails with the same subject line is
-over a threshold, then the excess is just logged, not sent out. Both
+over a threshold, then the excess is just counted, not sent out. Both
 thresholds are optional and they can be different.
 
 The mails that are not throttled are sent out with the regular Django SMTP
@@ -32,7 +32,7 @@ The package includes a management command that can be run from cron. If there
 are any throttled emails, then this will provide a report including statistics
 about how many mails have been held back.
 
-The cache is mainained in file on the filesystem. The method used is highly
+The cache is maintained in files on the filesystem. The method used is highly
 efficient for this purpose, and doing something similar in a database could
 quickly lead to performance issues which will make the overload worse, not
 better.

@@ -113,6 +113,6 @@ class ThrottledEmailBackend(BaseEmailBackend):
         if cls.truncate_subject is not None:
             subject_part = subject_part[: cls.truncate_subject]
         return os.path.join(
-            cls.tmpdir_name, cls.file_prefix, + str(bb), + "^" +
-            urlsafe_b64encode(subject_part).decode("ascii"),
+            cls.tmpdir_name, cls.file_prefix + str(bb) + "^" +
+            urlsafe_b64encode(subject_part).decode("ascii")
         )

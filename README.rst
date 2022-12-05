@@ -41,7 +41,20 @@ better.
 Installation and Configuration
 ------------------------------
 
-Install the package with pip, for example.
+Install the package with pip, for example:
+
+.. code:: bash
+
+	pip install django-email-throttler
+
+You need to add a reference in the **INSTALLED_APPS** section in the Django **settings.py** file:
+
+.. code:: python
+
+	INSTALLED_APPS = (
+		# ... whatever other apps ...
+		'django_email_throttler',
+	)
 
 Settings and Defaults
 ~~~~~~~~~~~~~~~~~~~~~

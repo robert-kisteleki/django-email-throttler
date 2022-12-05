@@ -18,7 +18,7 @@ How Does It Work?
 -----------------
 
 The package contains a Django email backend that has a local cache of what
-emails were sent (based on subjec, not content). If the total amount of mails
+emails were sent (based on subject, not content). If the total amount of mails
 per time unit goes over an overall threshold, then the excess is just counted,
 not sent out. Similarly, if the amount of mails with the same subject line is
 over a threshold, then the excess is just counted, not sent out. Both

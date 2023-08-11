@@ -6,7 +6,6 @@ from base64 import urlsafe_b64decode
 
 from django.core.mail import mail_admins
 from django.core.management.base import BaseCommand
-from django.conf import settings
 
 from ...throttler import ThrottledEmailBackend
 
@@ -21,7 +20,7 @@ class Command(BaseCommand):
     """
 
     help = "Report on email throttling"
-    requires_system_checks = False
+    requires_system_checks = []
 
     def add_arguments(self, parser):
 
@@ -118,7 +117,7 @@ class Command(BaseCommand):
     def _clean_log(cls, bb):
         pattern = os.path.join(ThrottledEmailBackend.tmpdir_name,
                                ThrottledEmailBackend.file_prefix+str(bb)+"*")
-        for f in glob.glob(pattern): 
+        for f in glob.glob(pattern):
             if os.path.isfile(f):
                 os.remove(f)
 

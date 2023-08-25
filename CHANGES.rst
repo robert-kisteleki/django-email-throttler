@@ -1,6 +1,12 @@
 Release History
 ===============
 
+0.5.0 (2023-08-25)
+------------------
+
+- Django 4.1 compatibility change (thanks @l00sed!)
+- Drop Python 2.x support
+
 0.4.1 (2019-08-21)
 ------------------
 
